@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "preinstall": "npx npm-force-resolutions"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.18.5",
@@ -17,20 +18,27 @@
     "firebase": "^11.7.1",
     "lucide-react": "^0.503.0",
     "next": "15.3.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "rodal": "^2.1.0",
-    "swiper": "^11.2.6"
+    "swiper": "^11.2.6",
+    "react-hot-toast": "^2.5.2",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
+    "npm-force-resolutions": "^0.0.3",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "resolutions": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   }
 }
