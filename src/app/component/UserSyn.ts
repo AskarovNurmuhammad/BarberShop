@@ -1,16 +1,17 @@
 "use client";
 import { useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useUser, UserResource } from "@clerk/nextjs";
 import { supabase } from "../supbaseClient";
 
-interface ClerkUser {
-  id: string;
-  username?: string;
-  emailAddresses: { emailAddress: string }[];
+interface SupabaseUser {
+  clerk_id: string;
+  name: string;
+  email: string;
   password?: string;
+  role: string;
 }
 
-const insertUserToSupabase = async (user: ClerkUser) => {
+const insertUserToSupabase = async (user: UserResource) => {
   // Avval user bazada mavjudmi, tekshiramiz
   const { data: existingUser } = await supabase
     .from("users")
@@ -24,15 +25,17 @@ const insertUserToSupabase = async (user: ClerkUser) => {
   }
 
   // Agar mavjud bo'lmasa, yangi userni yozamiz
-  const { error: insertError } = await supabase.from("users").insert([
-    {
-      clerk_id: user.id,
-      name: user.username || "",
-      email: user.emailAddresses[0]?.emailAddress || "",
-      password: user.password || "",
-      role: "user",
-    },
-  ]);
+  const userData: SupabaseUser = {
+    clerk_id: user.id,
+    name: user.username || "",
+    email: user.emailAddresses[0]?.emailAddress || "",
+    password: "", // Parolni Clerk bilan boshqarish kerak
+    role: "user",
+  };
+
+  const { error: insertError } = await supabase
+    .from("users")
+    .insert([userData]);
 
   if (insertError) {
     console.error("Supabase insert error:", insertError.message);
