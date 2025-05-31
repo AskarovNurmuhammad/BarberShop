@@ -4,15 +4,30 @@ import { useEffect, useState } from "react";
 import { supabase } from "../supbaseClient";
 import Footer from "../component/footer";
 
+interface Service {
+  id?: number;
+  title?: string;
+}
+
+interface Master {
+  name: string;
+}
+
+interface Time {
+  time: string;
+}
+
+interface Book {
+  time: string;
+}
+
 export default function Booking() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedMaster, setSelectedMaster] = useState("");
-  1;
   const [selectedTime, setSelectedTime] = useState("");
-  const [service, setService] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [service, setService] = useState<Service | null>(null);
 
   const [masters, setMasters] = useState<string[]>([]);
   const [times, setTimes] = useState<string[]>([]);
@@ -31,16 +46,15 @@ export default function Booking() {
       }
 
       try {
-        const parsedService = JSON.parse(
-          decodeURIComponent(serviceParam as string)
+        const parsedService: Service = JSON.parse(
+          decodeURIComponent(serviceParam)
         );
 
-        // Agar `id` maydoni bo'lmasa, uni avtomatik hisoblaymiz
         if (!parsedService.id) {
           const { count } = await supabase
             .from("services")
             .select("*", { count: "exact" });
-          parsedService.id = (count || 0) + 1; // Yangi id ketma-ketlikda bo'ladi
+          parsedService.id = (count || 0) + 1;
         }
 
         console.log("Service obyekt:", parsedService);
@@ -53,10 +67,12 @@ export default function Booking() {
 
     fetchServiceId();
   }, [searchParams, router]);
+
   useEffect(() => {
     fetchMasters();
     fetchTimes();
   }, []);
+
   useEffect(() => {
     const fetchBookedTimes = async () => {
       if (!selectedDay || !selectedMaster) {
@@ -70,7 +86,7 @@ export default function Booking() {
         .eq("day", selectedDay)
         .eq("master", selectedMaster);
 
-      if (data) setBookedTimes(data.map((b: any) => b.time));
+      if (data) setBookedTimes(data.map((b: Book) => b.time));
     };
 
     fetchBookedTimes();
@@ -78,12 +94,12 @@ export default function Booking() {
 
   const fetchMasters = async () => {
     const { data } = await supabase.from("masters").select("name");
-    if (data) setMasters(data.map((m: any) => m.name));
+    if (data) setMasters(data.map((m: Master) => m.name));
   };
 
   const fetchTimes = async () => {
     const { data } = await supabase.from("times").select("*");
-    if (data) setTimes(data.map((t: any) => t.time));
+    if (data) setTimes(data.map((t: Time) => t.time));
   };
 
   const handleBook = async () => {
@@ -117,10 +133,8 @@ export default function Booking() {
   };
 
   const availableTimes = times.filter((t) => {
-    // Agar allaqachon band qilingan bo‘lsa – chiqarilmasin
     if (bookedTimes.includes(t)) return false;
 
-    // Agar bugungi kun tanlangan bo‘lsa – o'tgan vaqtlar chiqarilmasin
     if (selectedDay === todayDate) {
       const [hour, minute] = t.split(":").map(Number);
       const now = new Date();
@@ -128,7 +142,7 @@ export default function Booking() {
       selectedTime.setHours(hour, minute, 0, 0);
 
       if (selectedTime <= now) {
-        return false; // bu vaqt o‘tib ketgan
+        return false;
       }
     }
 
@@ -189,7 +203,7 @@ export default function Booking() {
         >
           Book
         </button>
-      </div>{" "}
+      </div>
       <Footer />
     </div>
   );

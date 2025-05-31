@@ -3,11 +3,18 @@ import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { supabase } from "../supbaseClient";
 
-const insertUserToSupabase = async (user: any) => {
+interface ClerkUser {
+  id: string;
+  username?: string;
+  emailAddresses: { emailAddress: string }[];
+  password?: string;
+}
+
+const insertUserToSupabase = async (user: ClerkUser) => {
   // Avval user bazada mavjudmi, tekshiramiz
-  const { data: existingUser, error: fetchError } = await supabase
+  const { data: existingUser } = await supabase
     .from("users")
-    .select("id") // faqat id ni tekshiramiz
+    .select("id")
     .eq("clerk_id", user.id)
     .single();
 
@@ -20,9 +27,9 @@ const insertUserToSupabase = async (user: any) => {
   const { error: insertError } = await supabase.from("users").insert([
     {
       clerk_id: user.id,
-      name: user.username,
-      email: user.emailAddresses[0].emailAddress,
-      password: user.password,
+      name: user.username || "",
+      email: user.emailAddresses[0]?.emailAddress || "",
+      password: user.password || "",
       role: "user",
     },
   ]);

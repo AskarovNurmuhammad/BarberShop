@@ -1,7 +1,7 @@
 "use client";
 import Footer from "@/app/component/footer";
 import { supabase } from "@/app/supbaseClient";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface Book {
   service_id: number;

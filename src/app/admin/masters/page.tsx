@@ -21,7 +21,6 @@ function Master() {
   });
   const [mastersList, setMastersList] = useState<Master[]>([]);
 
-  // Fetch data
   const fetchMasters = async () => {
     const { data, error } = await supabase.from("masters").select("*");
     if (error) {
@@ -46,7 +45,7 @@ function Master() {
         console.error("Yangilashda xatolik:", error);
       }
     } else {
-      const { data, error } = await supabase.from("masters").insert([masters]);
+      const { error } = await supabase.from("masters").insert([masters]);
       if (error) {
         console.error("Qo'shishda xatolik:", error);
       }
@@ -155,7 +154,7 @@ function Master() {
         >
           <option value="">Select skill</option>
           <option value="Mutaxasis">Mutaxasis</option>
-          <option value="O'rtacha">O'rtacha</option>
+          <option value="O'rtacha">O&apos;rtacha</option>
           <option value="Boshlangich">Boshlangich</option>
         </select>
 

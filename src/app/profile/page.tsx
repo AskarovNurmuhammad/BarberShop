@@ -3,11 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import Footer from "../component/footer";
-import { useClerk } from "@clerk/nextjs";
 import LogoutButton from "../component/LogoutButton/page";
 
 export default function ProfilePage() {
-  const { signOut } = useClerk();
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col  ">
       <div className="p-4 space-y-4 ">

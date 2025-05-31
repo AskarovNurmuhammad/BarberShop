@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Home,
-  LayoutDashboard,
-  Boxes,
-  Tags,
-  Users,
-  Settings,
-  ShoppingCart,
-} from "lucide-react";
+import { Home, LayoutDashboard, Boxes, Tags, Settings } from "lucide-react";
 
 const navLinks = [
   { href: "/admin/book", label: "Book", icon: LayoutDashboard },
@@ -40,11 +32,11 @@ export default function AdminLayout({
               href={href}
               key={href}
               className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all text-decoration-none
-        ${
-          isActive
-            ? "bg-blue-100 text-blue-700 font-semibold"
-            : "text-gray-600 hover:bg-gray-100 hover:text-blue-600"
-        }`}
+                ${
+                  isActive
+                    ? "bg-blue-100 text-blue-700 font-semibold"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-blue-600"
+                }`}
             >
               <Icon size={20} />
               <span>{label}</span>
@@ -52,14 +44,14 @@ export default function AdminLayout({
           );
         })}
       </aside>
-      <div className="w-full  bg-gray-100 text-center  overflow-hidden whitespace-nowrap">
-        <div className="bg-white h-[80px] ">
-          <div className=" mt-4  inline-block animate-marquee text- text-gray-700">
+      <div className="w-full bg-gray-100 text-center overflow-hidden whitespace-nowrap">
+        <div className="bg-white h-[80px]">
+          <div className="mt-4 inline-block animate-marquee text-gray-700">
             Hello! This barbershop website is currently in test mode. Please
             enter minimal information. Thank you for visiting!
           </div>
         </div>
-        <main className="flex-1 p-8 pb-0 ">{children}</main>
+        <main className="flex-1 p-8 pb-0">{children}</main>
       </div>
     </div>
   );

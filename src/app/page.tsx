@@ -8,31 +8,38 @@ import soqolImage from "./images/soqol.webp";
 import sochImage from "./images/erkaklar-soch-turmagi3.jpg";
 import Footer from "./component/footer";
 
+interface Service {
+  title: string;
+  price: string;
+  duration: string;
+  image: string;
+}
+
 export default function Home() {
   const router = useRouter();
 
-  const services = [
+  const services: Service[] = [
     {
       title: "Soch olish",
       price: "5000 so'm",
       duration: "30 daqiqa",
-      image: sochImage,
+      image: sochImage.src,
     },
     {
       title: "Soch buyash",
       price: "7000 so'm",
       duration: "40 daqiqa",
-      image: boyaImage,
+      image: boyaImage.src,
     },
     {
       title: "Soqol olish",
       price: "4000 so'm",
       duration: "20 daqiqa",
-      image: soqolImage,
+      image: soqolImage.src,
     },
   ];
 
-  const handleServiceClick = (service: any) => {
+  const handleServiceClick = (service: Service) => {
     const query = `/booking?service=${encodeURIComponent(
       JSON.stringify(service)
     )}`;
@@ -62,6 +69,8 @@ export default function Home() {
               <Image
                 src={service.image}
                 alt={service.title}
+                width={300}
+                height={200}
                 className="w-full h-32 object-cover rounded-md mb-4"
               />
               <h3 className="text-xl font-semibold text-gray-800">
@@ -84,7 +93,7 @@ export default function Home() {
         <p className="text-sm">
           © 2025 Barber Shop. Barcha huquqlar himoyalangan.
         </p>
-        <p className="text-sm">Biz bilan bog'laning: +998 90 123 45 67</p>
+        <p className="text-sm">Biz bilan bog&apos;laning: +998 90 123 45 67</p>
       </footer>
       <Footer />
     </div>

@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import Rodal from "rodal";
 import "rodal/lib/rodal.css";
 import { supabase } from "@/app/supbaseClient";
-import { log } from "console";
 
 interface Service {
   id?: string;
@@ -38,8 +37,6 @@ function Services() {
 
   // Save or Update service
   const handleSave = async () => {
-    console.log(service);
-
     if (editingId) {
       const { error } = await supabase
         .from("services")
