@@ -1,18 +1,27 @@
 "use client";
 import { useEffect } from "react";
-import { useUser, UserResource } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { supabase } from "../supbaseClient";
+
+interface ClerkUser {
+  id: string;
+  username?: string | null;
+  emailAddresses: Array<{
+    emailAddress: string;
+  }>;
+  firstName?: string | null;
+  lastName?: string | null;
+}
 
 interface SupabaseUser {
   clerk_id: string;
   name: string;
   email: string;
-  password?: string;
   role: string;
 }
 
-const insertUserToSupabase = async (user: UserResource) => {
-  // Avval user bazada mavjudmi, tekshiramiz
+const insertUserToSupabase = async (user: ClerkUser) => {
+  // Avval tekshiramiz user bazada bor-yo'qligini
   const { data: existingUser } = await supabase
     .from("users")
     .select("id")
@@ -20,27 +29,28 @@ const insertUserToSupabase = async (user: UserResource) => {
     .single();
 
   if (existingUser) {
-    console.log("User already exists in Supabase, skipping insert.");
+    console.log("User already exists in Supabase");
     return;
   }
 
-  // Agar mavjud bo'lmasa, yangi userni yozamiz
+  // Yangi user uchun ma'lumot
   const userData: SupabaseUser = {
     clerk_id: user.id,
-    name: user.username || "",
+    name:
+      [user.firstName, user.lastName].filter(Boolean).join(" ") ||
+      user.username ||
+      "User",
     email: user.emailAddresses[0]?.emailAddress || "",
-    password: "", // Parolni Clerk bilan boshqarish kerak
     role: "user",
   };
 
-  const { error: insertError } = await supabase
-    .from("users")
-    .insert([userData]);
+  // Supabasega yozamiz
+  const { error } = await supabase.from("users").insert([userData]);
 
-  if (insertError) {
-    console.error("Supabase insert error:", insertError.message);
+  if (error) {
+    console.error("Error inserting user:", error.message);
   } else {
-    console.log("User inserted into Supabase");
+    console.log("User successfully added to Supabase");
   }
 };
 
@@ -49,7 +59,13 @@ export const UserSync = () => {
 
   useEffect(() => {
     if (user) {
-      insertUserToSupabase(user);
+      insertUserToSupabase({
+        id: user.id,
+        username: user.username,
+        emailAddresses: user.emailAddresses,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      });
     }
   }, [user]);
 
